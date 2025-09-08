@@ -1,0 +1,21 @@
+plugins {
+    id 'java-library'
+}
+
+group = 'gc.board.common'
+version = '0.0.1'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // 외부 라이브러리 필요시만 추가
+    // 자기 자신 JAR이나 service 모듈 참조 금지
+}
