@@ -1,5 +1,6 @@
 package gc.board.article.api;
 
+import gc.board.article.service.response.ArticlePageResponse;
 import gc.board.article.service.response.ArticleResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -83,5 +84,19 @@ public class ArticleApiTest {
     @Test
     void deleteTest() {
         delete(createdId);
+    }
+
+    @Test
+    void readAllTest() {
+        ArticlePageResponse response = client.get()
+                .uri("/v1/articles?boardId=1&pageSize=30&page=1")
+                .retrieve()
+                .body(ArticlePageResponse.class);
+        
+        System.out.println("Article count: " + response.getArticleCount());
+        
+        response.getArticles().forEach(article -> {
+            System.out.println("Article ID: " + article.getArticleId());
+        });
     }
 }
