@@ -4,11 +4,15 @@ import gc.board.article.entity.Article;
 import gc.board.article.repository.ArticleRepository;
 import gc.board.article.service.request.ArticleCreateRequest;
 import gc.board.article.service.request.ArticleUpdateRequest;
+import gc.board.article.service.response.ArticlePageResponse;
 import gc.board.article.service.response.ArticleResponse;
 import jakarta.transaction.Transactional;
 import kuke.board.common.snowflake.Snowflake;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,5 +46,20 @@ public class ArticleService {
     @Transactional
     public void delete(Long id) {
         articleRepository.deleteById(id);
+    }
+
+    public ArticlePageResponse readAll(Long boardId, Long page, Long pageSize) {
+        Long offset = (page - 1) * pageSize;
+        List<Article> articles = articleRepository.findAll(boardId, offset, pageSize);
+        
+        List<ArticleResponse> articleResponses = articles.stream()
+                .map(ArticleResponse::from)
+                .collect(Collectors.toList());
+        
+        Long movablePageCount = 10L;
+        Long limit = PageLimitCalculator.calculatePageLimit(page, pageSize, movablePageCount);
+        Long articleCount = articleRepository.count(boardId, limit);
+        
+        return ArticlePageResponse.of(articleResponses, articleCount);
     }
 }
