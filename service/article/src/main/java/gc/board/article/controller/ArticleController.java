@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 public class ArticleController {
@@ -27,6 +29,16 @@ public class ArticleController {
             @RequestParam("page") Long page,
             @RequestParam("pageSize") Long pageSize) {
         return articleService.readAll(boardId, page, pageSize);
+    }
+
+    //무한스크롤 조회
+    @GetMapping("/v1/articles/infinite-scroll")
+    public ResponseEntity<List<ArticleResponse>> readAllInfiniteScroll(
+            @RequestParam("boardId") Long boardId,
+            @RequestParam("pageSize") Long pageSize,
+            @RequestParam(value = "lastArticleId", required = false) Long lastArticleId) {
+        List<ArticleResponse> articles = articleService.readAllInfiniteScroll(boardId, pageSize, lastArticleId);
+        return ResponseEntity.ok(articles);
     }
 
     //생성
