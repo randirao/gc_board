@@ -51,15 +51,25 @@ public class ArticleService {
     public ArticlePageResponse readAll(Long boardId, Long page, Long pageSize) {
         Long offset = (page - 1) * pageSize;
         List<Article> articles = articleRepository.findAll(boardId, offset, pageSize);
-        
+
         List<ArticleResponse> articleResponses = articles.stream()
                 .map(ArticleResponse::from)
                 .collect(Collectors.toList());
-        
+
         Long movablePageCount = 10L;
         Long limit = PageLimitCalculator.calculatePageLimit(page, pageSize, movablePageCount);
         Long articleCount = articleRepository.count(boardId, limit);
-        
+
         return ArticlePageResponse.of(articleResponses, articleCount);
+    }
+
+    public List<ArticleResponse> readAllInfiniteScroll(Long boardId, Long limit, Long lastArticleId) {
+        List<Article> articles = lastArticleId == null
+                ? articleRepository.findAllInfiniteScroll(boardId, limit)
+                : articleRepository.findAllInfiniteScroll(boardId, limit, lastArticleId);
+
+        return articles.stream()
+                .map(ArticleResponse::from)
+                .collect(Collectors.toList());
     }
 }
