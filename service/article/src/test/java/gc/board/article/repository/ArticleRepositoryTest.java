@@ -44,4 +44,45 @@ public class ArticleRepositoryTest {
 
         log.info("Count result: {}", count);
     }
+
+    @Test
+    public void findAllInfiniteScrollTest() {
+        Long boardId = 1L;
+        Long limit = 30L;
+
+        List<Article> firstPage = articleRepository.findAllInfiniteScroll(boardId, limit);
+
+        log.info("첫 번째 페이지 결과 크기: {}", firstPage.size());
+        log.info("첫 번째 페이지 Article ID 목록:");
+        for (Article article : firstPage) {
+            log.info("Article ID: {}", article.getArticleId());
+        }
+
+        if (!firstPage.isEmpty()) {
+            Long lastArticleId = firstPage.get(firstPage.size() - 1).getArticleId();
+            log.info("첫 번째 페이지 마지막 Article ID: {}", lastArticleId);
+
+            List<Article> secondPage = articleRepository.findAllInfiniteScroll(boardId, limit, lastArticleId);
+
+            log.info("두 번째 페이지 결과 크기: {}", secondPage.size());
+            log.info("두 번째 페이지 Article ID 목록:");
+            for (Article article : secondPage) {
+                log.info("Article ID: {}", article.getArticleId());
+            }
+
+            if (!secondPage.isEmpty()) {
+                Long firstArticleIdOfSecondPage = secondPage.get(0).getArticleId();
+                log.info("두 번째 페이지 첫 번째 Article ID: {}", firstArticleIdOfSecondPage);
+
+                boolean isContinuous = lastArticleId > firstArticleIdOfSecondPage;
+                log.info("연속성 확인 ({} > {}): {}", lastArticleId, firstArticleIdOfSecondPage, isContinuous);
+
+                if (isContinuous) {
+                    log.info("무한스크롤 연속성 테스트 성공!");
+                } else {
+                    log.error("무한스크롤 연속성 테스트 실패!");
+                }
+            }
+        }
+    }
 }
