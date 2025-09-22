@@ -1,5 +1,6 @@
 package gc.board.comment.service;
 
+import gc.board.comment.entity.Comment;
 import gc.board.comment.repository.CommentRepository;
 import gc.board.comment.service.request.CommentCreateRequest;
 import gc.board.comment.service.response.CommentResponse;
@@ -7,6 +8,8 @@ import jakarta.transaction.Transactional;
 import kuke.board.common.snowflake.Snowflake;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import static java.util.function.Predicate.not;
 
 @Service
 @RequiredArgsConstructor
@@ -17,10 +20,59 @@ public class CommentService {
     //생성
     @Transactional
     public CommentResponse create(CommentCreateRequest request) {
+        Comment parent = findParent(request);
+        Comment comment = commentRepository.save(
+                Comment.create(
+                        snowflake.nextId(), request.getContent(),
+                        parent == null ? null : parent.getCommentId(),
+                        request.getArticleId(), request.getWriterId()
+                )
+        );
+        return CommentResponse.from(comment);
+    }
 
+    private Comment findParent(CommentCreateRequest request) {
+        Long parentCommentId = request.getParentCommentId();
+        if(parentCommentId == null) {
+            return null;
+        }
+        return commentRepository.findById(parentCommentId)
+                .filter(not(Comment::getDeleted))
+                .filter(Comment::isRoot)
+                .orElseThrow();
     }
 
     //읽기
+    public CommentResponse read(Long commentId) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow();
+        return CommentResponse.from(comment);
+    }
 
     //삭제
+    @Transactional
+    public void delete(Long commentId) {
+        commentRepository.findById(commentId)
+                .filter(not(Comment::getDeleted))
+                .ifPresent(comment -> {
+                    if (hasChildren(comment)) {
+                        comment.delete();
+                    } else {
+                        delete(comment);
+                    }
+                });
+    }
+
+    public boolean hasChildren(Comment comment) {
+        return commentRepository.countBy(comment.getArticleId(), comment.getParentCommentId(), 2L) == 2;
+    }
+
+    public void delete(Comment comment){
+        commentRepository.deleteById(comment.getCommentId());
+        if(!comment.isRoot()){
+            commentRepository.findById((comment.getParentCommentId()))
+                    .filter(Comment::getDeleted)
+                    .filter(not(this::hasChildren))
+                    .ifPresent(this::delete); //재귀호출
+        }
+    }
 }
