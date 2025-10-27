@@ -3,11 +3,14 @@ package gc.board.comment.service;
 import gc.board.comment.entity.Comment;
 import gc.board.comment.repository.CommentRepository;
 import gc.board.comment.service.request.CommentCreateRequest;
+import gc.board.comment.service.response.CommentPageResponse;
 import gc.board.comment.service.response.CommentResponse;
 import kuke.board.common.snowflake.Snowflake;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static java.util.function.Predicate.not;
 
@@ -75,4 +78,29 @@ public class CommentService {
               .ifPresent(this::delete); // 재귀 호출
     }
   }
+
+  // 페이지 번호 방식의 목록 조회를 위한 메서드
+    public CommentPageResponse readAll(Long articleId, Long page, Long pageSize) {
+      return CommentPageResponse.of(
+              commentRepository.findAll(articleId, (page-1)*pageSize, pageSize).stream()
+                      .map(CommentResponse::from)
+                      .toList(),
+              commentRepository.count(
+                      articleId, PageLimitCalculator.calculatePageLimit(page, pageSize, 10L)
+              )
+      );
+    }
+
+    // 무한 스크롤 목록 조회를 위한 메서드
+    public List<CommentResponse> readAll(
+            Long articleId, Long lastParentCommentId, Long lastCommentId, Long pageSize
+    ){
+        List<Comment> comments = lastParentCommentId == null || lastCommentId == null ?
+                commentRepository.findAllInfiniteScroll(articleId, pageSize) :
+                commentRepository.findAllInfiniteScroll(articleId, lastParentCommentId, lastCommentId, pageSize);
+
+        return comments.stream()
+                .map(CommentResponse::from)
+                .toList();
+    }
 }
