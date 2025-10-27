@@ -6,6 +6,7 @@ import gc.board.comment.service.request.CommentCreateRequest;
 import gc.board.comment.service.response.CommentPageResponse;
 import gc.board.comment.service.response.CommentResponse;
 import kuke.board.common.snowflake.Snowflake;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +15,7 @@ import java.util.List;
 
 import static java.util.function.Predicate.not;
 
+@Getter
 @Service
 @RequiredArgsConstructor
 public class CommentService {
