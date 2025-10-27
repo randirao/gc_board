@@ -1,5 +1,6 @@
 package gc.board.comment.api;
 
+import gc.board.comment.service.response.CommentPageResponse;
 import gc.board.comment.service.response.CommentResponse;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -68,5 +69,21 @@ public class CommentApiTest {
     private String content;
     private Long parentCommentId;
     private Long writerId;
+  }
+
+  @Test
+    void readAll(){
+      CommentPageResponse response = restClient.get()
+              .uri("/v1/comments?articleId=1&page=1&pageSize=10")
+              .retrieve()
+              .body(CommentPageResponse.class);
+
+      System.out.println("response.getCommentCount() = " + response.getCommentCount());
+
+      for(CommentResponse comment : response.getComments()) {
+          if(!comment.getCommentId().equals(comment.getParentCommentId()))
+              System.out.print("\t");
+        System.out.println("commentId = " + comment.getCommentId());
+      }
   }
 }
