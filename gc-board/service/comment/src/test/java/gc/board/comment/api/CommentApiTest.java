@@ -6,8 +6,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.web.client.RestClient;
+
+import java.util.List;
 
 public class CommentApiTest {
   RestClient restClient = RestClient.create("http://localhost:9001");
@@ -86,4 +90,53 @@ public class CommentApiTest {
         System.out.println("commentId = " + comment.getCommentId());
       }
   }
+
+    @Test
+    void readAllInfiniteScroll() {
+        final long articleId = 1L;
+        final int pageSize = 5;
+
+        // 무한 스크롤 방식의 첫 번째 페이지(response1)
+        List<CommentResponse> response1 = restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/v1/comments/infinite-scroll")
+                        .queryParam("articleId", articleId)
+                        .queryParam("pageSize", pageSize)
+                        .build())
+                .retrieve()
+                .body(new ParameterizedTypeReference<List<CommentResponse>>() {
+                });
+
+        System.out.println("first page");
+        Assertions.assertNotNull(response1);
+        for (CommentResponse comment : response1) {
+            if (!comment.getCommentId().equals(comment.getParentCommentId()))
+                System.out.print("\t");
+            System.out.println("commentId = " + comment.getCommentId());
+        }
+
+        Long lastCommentId = response1.getLast().getCommentId();
+        Long lastParentId = response1.getLast().getParentCommentId();
+
+        // 무한 스크롤 방식의 두 번째 페이지(response2)
+        List<CommentResponse> response2 = restClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/v1/comments/infinite-scroll")
+                        .queryParam("articleId", articleId)
+                        .queryParam("pageSize", pageSize)
+                        .queryParam("parentId", lastParentId)
+                        .queryParam("lastCommentId", lastCommentId)
+                        .build())
+                .retrieve()
+                .body(new ParameterizedTypeReference<List<CommentResponse>>() {
+                });
+
+        System.out.println("second page");
+        Assertions.assertNotNull(response2);
+        for (CommentResponse comment : response2) {
+            if (!comment.getCommentId().equals(comment.getParentCommentId()))
+                System.out.print("\t");
+            System.out.println("commentId = " + comment.getCommentId());
+        }
+    }
 }

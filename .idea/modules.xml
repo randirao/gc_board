@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/2025스프링부트.iml" filepath="$PROJECT_DIR$/.idea/2025스프링부트.iml" />
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/934463103/gc-board.main.iml" filepath="$PROJECT_DIR$/.idea/modules/934463103/gc-board.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/499131838/gc-board.common.snowflake.main.iml" filepath="$PROJECT_DIR$/.idea/modules/499131838/gc-board.common.snowflake.main.iml" />
     </modules>
   </component>
 </project>

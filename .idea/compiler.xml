@@ -7,33 +7,60 @@
         <processorPath useClasspath="false">
           <entry name="$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.projectlombok/lombok/1.18.34/ec547ef414ab1d2c040118fb9c1c265ada63af14/lombok-1.18.34.jar" />
         </processorPath>
-        <module name="gc-board.service.article.main" />
+        <module name="gc-board.service.hot-article.main" />
+        <module name="gc-board.service.like.main" />
+        <module name="gc-board.service.article-read.main" />
         <module name="gc-board.service.article.test" />
-        <module name="gc-board.service.main" />
         <module name="gc-board.test" />
-        <module name="gc-board.service.test" />
+        <module name="gc-board.service.like.test" />
+        <module name="gc-board.service.view.main" />
         <module name="gc-board.main" />
+        <module name="gc-board.service.article-read.test" />
+        <module name="gc-board.common.snowflake.main" />
+        <module name="gc-board.service.article.main" />
+        <module name="gc-board.service.comment.test" />
+        <module name="gc-board.service.view.test" />
+        <module name="gc-board.common.snowflake.test" />
+        <module name="gc-board.service.main" />
+        <module name="gc-board.service.comment.main" />
+        <module name="gc-board.service.test" />
         <module name="gc-board.common.test" />
         <module name="gc-board.common.main" />
+        <module name="gc-board.service.hot-article.test" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="gc-board" target="21" />
-    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="gc-board" options="-parameters" />
       <module name="gc-board.common" options="-parameters" />
       <module name="gc-board.common.main" options="-parameters" />
+      <module name="gc-board.common.snowflake" options="-parameters" />
+      <module name="gc-board.common.snowflake.main" options="-parameters" />
+      <module name="gc-board.common.snowflake.test" options="-parameters" />
       <module name="gc-board.common.test" options="-parameters" />
       <module name="gc-board.main" options="-parameters" />
       <module name="gc-board.service" options="-parameters" />
       <module name="gc-board.service.article" options="-parameters" />
+      <module name="gc-board.service.article-read" options="-parameters" />
+      <module name="gc-board.service.article-read.main" options="-parameters" />
+      <module name="gc-board.service.article-read.test" options="-parameters" />
       <module name="gc-board.service.article.main" options="-parameters" />
       <module name="gc-board.service.article.test" options="-parameters" />
+      <module name="gc-board.service.comment" options="-parameters" />
+      <module name="gc-board.service.comment.main" options="-parameters" />
+      <module name="gc-board.service.comment.test" options="-parameters" />
+      <module name="gc-board.service.hot-article" options="-parameters" />
+      <module name="gc-board.service.hot-article.main" options="-parameters" />
+      <module name="gc-board.service.hot-article.test" options="-parameters" />
+      <module name="gc-board.service.like" options="-parameters" />
+      <module name="gc-board.service.like.main" options="-parameters" />
+      <module name="gc-board.service.like.test" options="-parameters" />
       <module name="gc-board.service.main" options="-parameters" />
       <module name="gc-board.service.test" options="-parameters" />
+      <module name="gc-board.service.view" options="-parameters" />
+      <module name="gc-board.service.view.main" options="-parameters" />
+      <module name="gc-board.service.view.test" options="-parameters" />
       <module name="gc-board.test" options="-parameters" />
     </option>
   </component>

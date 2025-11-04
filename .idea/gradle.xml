@@ -10,8 +10,14 @@
           <set>
             <option value="$PROJECT_DIR$/../2025스프링부트/gc-board" />
             <option value="$PROJECT_DIR$/../2025스프링부트/gc-board/common" />
+            <option value="$PROJECT_DIR$/../2025스프링부트/gc-board/common/snowflake" />
             <option value="$PROJECT_DIR$/../2025스프링부트/gc-board/service" />
             <option value="$PROJECT_DIR$/../2025스프링부트/gc-board/service/article" />
+            <option value="$PROJECT_DIR$/../2025스프링부트/gc-board/service/article-read" />
+            <option value="$PROJECT_DIR$/../2025스프링부트/gc-board/service/comment" />
+            <option value="$PROJECT_DIR$/../2025스프링부트/gc-board/service/hot-article" />
+            <option value="$PROJECT_DIR$/../2025스프링부트/gc-board/service/like" />
+            <option value="$PROJECT_DIR$/../2025스프링부트/gc-board/service/view" />
           </set>
         </option>
       </GradleProjectSettings>
